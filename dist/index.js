@@ -1,5 +1,6 @@
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
+var mascotas_react_common = require('mascotas_react_common');
 var React = require('react');
 var React__default = _interopDefault(React);
 
@@ -20,212 +21,6 @@ function _catch(body, recover) {
 		return result.then(void 0, recover);
 	}
 	return result;
-}
-
-function DangerLabel(props) {
-  if (!props.message) {
-    return null;
-  }
-
-  return /*#__PURE__*/React__default.createElement("div", {
-    className: "alert alert-danger",
-    role: "alert"
-  }, props.message);
-}
-
-function ErrorLabel(props) {
-  if (!props.message) {
-    return null;
-  }
-
-  return /*#__PURE__*/React__default.createElement("div", {
-    className: "invalid-feedback"
-  }, props.message);
-}
-
-function Form(props) {
-  return /*#__PURE__*/React__default.createElement("form", {
-    onSubmit: function onSubmit(e) {
-      return e.preventDefault();
-    }
-  }, props.children);
-}
-
-function FormAcceptButton(props) {
-  return /*#__PURE__*/React__default.createElement("button", {
-    className: "btn btn-primary",
-    onClick: props.onClick
-  }, props.label);
-}
-
-function FormButton(props) {
-  return /*#__PURE__*/React__default.createElement("button", {
-    className: "btn btn-light",
-    onClick: props.onClick
-  }, props.label);
-}
-
-function FormButtonBar(props) {
-  return /*#__PURE__*/React__default.createElement("div", {
-    className: "btn-group "
-  }, props.children);
-}
-
-function FormInput(props) {
-  return /*#__PURE__*/React__default.createElement("div", {
-    className: "form-group"
-  }, /*#__PURE__*/React__default.createElement("label", null, props.label), /*#__PURE__*/React__default.createElement("input", {
-    id: props.name,
-    type: "text",
-    value: props.value,
-    onChange: props.onChange,
-    className: props.errorHandler.getErrorClass(props.name, "form-control")
-  }), /*#__PURE__*/React__default.createElement(ErrorLabel, {
-    message: props.errorHandler.getErrorText(props.name)
-  }));
-}
-
-function FormTitle(props) {
-  return /*#__PURE__*/React__default.createElement("h2", {
-    className: "global_title"
-  }, props.children);
-}
-
-function FormWarnButton(props) {
-  return /*#__PURE__*/React__default.createElement("button", {
-    hidden: props.hidden,
-    className: "btn btn-warning",
-    onClick: props.onClick
-  }, props.label);
-}
-
-function GlobalContent(props) {
-  return /*#__PURE__*/React__default.createElement("div", {
-    className: "global_content"
-  }, props.children);
-}
-
-var environment = {
-  backendUrl: process.env.BACKEND_URL || "http://localhost:3000"
-};
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-}
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
-
-  return arr2;
-}
-
-function _createForOfIteratorHelperLoose(o, allowArrayLike) {
-  var it;
-
-  if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) {
-    if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {
-      if (it) o = it;
-      var i = 0;
-      return function () {
-        if (i >= o.length) return {
-          done: true
-        };
-        return {
-          done: false,
-          value: o[i++]
-        };
-      };
-    }
-
-    throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-  }
-
-  it = o[Symbol.iterator]();
-  return it.next.bind(it);
-}
-
-function goHome(props) {
-  props.history.push("/");
-}
-function useForceUpdate() {
-  var setForceUpdate = React.useState(0)[1];
-  return function () {
-    setForceUpdate(Date.now);
-  };
-}
-
-var ErrorHandler = /*#__PURE__*/function () {
-  function ErrorHandler(forceUpdate) {
-    this.errorMessage = undefined;
-    this.errors = new Map();
-    this.forceUpdate = forceUpdate;
-  }
-
-  var _proto = ErrorHandler.prototype;
-
-  _proto.processRestValidations = function processRestValidations(data) {
-    if (this.errors && this.errors.size > 0) {
-      this.cleanRestValidations();
-      this.forceUpdate();
-    }
-
-    if (!data.response || !data.response.data) {
-      this.errorMessage = "Problemas de conexión, verifique conexión a internet.";
-      this.forceUpdate();
-      return;
-    }
-
-    if (data.response.data.messages) {
-      for (var _iterator = _createForOfIteratorHelperLoose(data.response.data.messages), _step; !(_step = _iterator()).done;) {
-        var error = _step.value;
-        this.errors.set(error.path, error.message);
-      }
-    } else if (typeof data.response.data.error === "string") {
-      this.errorMessage = data.response.data.error;
-    } else {
-      this.errorMessage = "Problemas internos del servidor";
-    }
-
-    this.forceUpdate();
-  };
-
-  _proto.addError = function addError(component, message) {
-    this.errors.set(component, message);
-    this.forceUpdate();
-  };
-
-  _proto.cleanRestValidations = function cleanRestValidations() {
-    this.errorMessage = undefined;
-    this.errors.clear();
-    this.forceUpdate();
-  };
-
-  _proto.getErrorText = function getErrorText(item) {
-    return this.errors.get(item);
-  };
-
-  _proto.getErrorClass = function getErrorClass(component, baseClass) {
-    return baseClass + (this.getErrorText(component) ? " is-invalid" : "");
-  };
-
-  _proto.hasErrors = function hasErrors() {
-    return this.errors.size > 0 && !this.errorMessage;
-  };
-
-  return ErrorHandler;
-}();
-
-function useErrorHandler() {
-  var forceUpdate = useForceUpdate();
-  var handler = React.useState(new ErrorHandler(forceUpdate))[0];
-  return handler;
 }
 
 var bind = function bind(fn, thisArg) {
@@ -1655,7 +1450,7 @@ var axios$1 = axios_1;
 var deletePet = function deletePet(id) {
   try {
     return Promise.resolve(_catch(function () {
-      return Promise.resolve(axios$1["delete"](environment.backendUrl + "/v1/pet/" + id)).then(function () {
+      return Promise.resolve(axios$1["delete"](mascotas_react_common.environment.backendUrl + "/v1/pet/" + id)).then(function () {
         return Promise.resolve();
       });
     }, function (err) {
@@ -1668,7 +1463,7 @@ var deletePet = function deletePet(id) {
 var savePet = function savePet(payload) {
   try {
     return Promise.resolve(_catch(function () {
-      return Promise.resolve(axios$1.post(environment.backendUrl + "/v1/pet/" + payload.id, payload)).then(function (res) {
+      return Promise.resolve(axios$1.post(mascotas_react_common.environment.backendUrl + "/v1/pet/" + payload.id, payload)).then(function (res) {
         return Promise.resolve(res.data);
       });
     }, function (err) {
@@ -1681,7 +1476,7 @@ var savePet = function savePet(payload) {
 var newPet = function newPet(payload) {
   try {
     return Promise.resolve(_catch(function () {
-      return Promise.resolve(axios$1.post(environment.backendUrl + "/v1/pet", payload)).then(function (res) {
+      return Promise.resolve(axios$1.post(mascotas_react_common.environment.backendUrl + "/v1/pet", payload)).then(function (res) {
         return Promise.resolve(res.data);
       });
     }, function (err) {
@@ -1694,7 +1489,7 @@ var newPet = function newPet(payload) {
 var loadPet = function loadPet(id) {
   try {
     return Promise.resolve(_catch(function () {
-      return Promise.resolve(axios$1.get(environment.backendUrl + "/v1/pet/" + id)).then(function (res) {
+      return Promise.resolve(axios$1.get(mascotas_react_common.environment.backendUrl + "/v1/pet/" + id)).then(function (res) {
         return Promise.resolve(res.data);
       });
     }, function (err) {
@@ -1707,7 +1502,7 @@ var loadPet = function loadPet(id) {
 var loadPets = function loadPets() {
   try {
     return Promise.resolve(_catch(function () {
-      return Promise.resolve(axios$1.get(environment.backendUrl + "/v1/pet")).then(function (res) {
+      return Promise.resolve(axios$1.get(mascotas_react_common.environment.backendUrl + "/v1/pet")).then(function (res) {
         return Promise.resolve(res.data);
       });
     }, function (err) {
@@ -1736,7 +1531,7 @@ function NewPet(props) {
       name = _useState4[0],
       setName = _useState4[1];
 
-  var errorHandler = useErrorHandler();
+  var errorHandler = mascotas_react_common.useErrorHandler();
 
   var loadPetById = function loadPetById(id) {
     try {
@@ -1838,7 +1633,7 @@ function NewPet(props) {
       loadPetById(id);
     }
   }, []);
-  return /*#__PURE__*/React__default.createElement(GlobalContent, null, /*#__PURE__*/React__default.createElement(FormTitle, null, "Nueva Mascota"), /*#__PURE__*/React__default.createElement(Form, null, /*#__PURE__*/React__default.createElement(FormInput, {
+  return /*#__PURE__*/React__default.createElement(mascotas_react_common.GlobalContent, null, /*#__PURE__*/React__default.createElement(mascotas_react_common.FormTitle, null, "Nueva Mascota"), /*#__PURE__*/React__default.createElement(mascotas_react_common.Form, null, /*#__PURE__*/React__default.createElement(mascotas_react_common.FormInput, {
     label: "Nombre",
     name: "name",
     value: name,
@@ -1846,7 +1641,7 @@ function NewPet(props) {
       return setName(event.target.value);
     },
     errorHandler: errorHandler
-  }), /*#__PURE__*/React__default.createElement(FormInput, {
+  }), /*#__PURE__*/React__default.createElement(mascotas_react_common.FormInput, {
     label: "Descripci\xF3n",
     name: "description",
     value: description,
@@ -1854,7 +1649,7 @@ function NewPet(props) {
       return setDescription(event.target.value);
     },
     errorHandler: errorHandler
-  }), /*#__PURE__*/React__default.createElement(FormInput, {
+  }), /*#__PURE__*/React__default.createElement(mascotas_react_common.FormInput, {
     label: "Fecha de Nacimiento",
     name: "birthDate",
     value: birthDate,
@@ -1862,19 +1657,19 @@ function NewPet(props) {
       return setBirthDate(event.target.value);
     },
     errorHandler: errorHandler
-  }), /*#__PURE__*/React__default.createElement(DangerLabel, {
+  }), /*#__PURE__*/React__default.createElement(mascotas_react_common.DangerLabel, {
     message: errorHandler.errorMessage
-  }), /*#__PURE__*/React__default.createElement(FormButtonBar, null, /*#__PURE__*/React__default.createElement(FormAcceptButton, {
+  }), /*#__PURE__*/React__default.createElement(mascotas_react_common.FormButtonBar, null, /*#__PURE__*/React__default.createElement(mascotas_react_common.FormAcceptButton, {
     label: "Guardar",
     onClick: saveClick
-  }), /*#__PURE__*/React__default.createElement(FormWarnButton, {
+  }), /*#__PURE__*/React__default.createElement(mascotas_react_common.FormWarnButton, {
     hidden: !petId,
     label: "Eliminar",
     onClick: deleteClick
-  }), /*#__PURE__*/React__default.createElement(FormButton, {
+  }), /*#__PURE__*/React__default.createElement(mascotas_react_common.FormButton, {
     label: "Cancelar",
     onClick: function onClick() {
-      return goHome(props);
+      return mascotas_react_common.goHome(props);
     }
   }))));
 }
@@ -1884,7 +1679,7 @@ function Pets(props) {
       pets = _useState[0],
       setPets = _useState[1];
 
-  var errorHandler = useErrorHandler();
+  var errorHandler = mascotas_react_common.useErrorHandler();
 
   var loadCurrentPets = function loadCurrentPets() {
     try {
@@ -1913,7 +1708,7 @@ function Pets(props) {
   React.useEffect(function () {
     loadCurrentPets();
   }, []);
-  return /*#__PURE__*/React__default.createElement(GlobalContent, null, /*#__PURE__*/React__default.createElement(FormTitle, null, "Mascotas"), /*#__PURE__*/React__default.createElement("table", {
+  return /*#__PURE__*/React__default.createElement(mascotas_react_common.GlobalContent, null, /*#__PURE__*/React__default.createElement(mascotas_react_common.FormTitle, null, "Mascotas"), /*#__PURE__*/React__default.createElement("table", {
     id: "mascotas",
     className: "table"
   }, /*#__PURE__*/React__default.createElement("thead", null, /*#__PURE__*/React__default.createElement("tr", null, /*#__PURE__*/React__default.createElement("th", null, " Nombre "), /*#__PURE__*/React__default.createElement("th", null, " Descripci\xF3n "), /*#__PURE__*/React__default.createElement("th", null, " "))), /*#__PURE__*/React__default.createElement("tbody", null, pets.map(function (pet, i) {
@@ -1928,13 +1723,13 @@ function Pets(props) {
         return editPetClick(pet.id);
       }
     })));
-  }))), /*#__PURE__*/React__default.createElement(FormButtonBar, null, /*#__PURE__*/React__default.createElement(FormAcceptButton, {
+  }))), /*#__PURE__*/React__default.createElement(mascotas_react_common.FormButtonBar, null, /*#__PURE__*/React__default.createElement(mascotas_react_common.FormAcceptButton, {
     label: "Nueva Mascota",
     onClick: newPetClick
-  }), /*#__PURE__*/React__default.createElement(FormButton, {
+  }), /*#__PURE__*/React__default.createElement(mascotas_react_common.FormButton, {
     label: "Cancelar",
     onClick: function onClick() {
-      return goHome(props);
+      return mascotas_react_common.goHome(props);
     }
   })));
 }
